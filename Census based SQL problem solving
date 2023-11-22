@@ -1,56 +1,84 @@
+Link for Data - 
+https://docs.google.com/spreadsheets/u/0/d/1ML9R2hVbFj3FSGSZ6_eoDV6TSqsH6hEv/htmlview
+https://docs.google.com/spreadsheets/u/0/d/1IWpzYcYGGmho7IZgriPMdkB620AAhxj_/htmlview
+
+
+
+
+
+SQL Code:
+
 select * from project.dbo.data1
 select * from project.dbo.data2
+
 -- Number of rows
 select count(*) from project..data1
 select count(*) from project..data2
+
 --data for bihar,jharkhand
 select * from project.dbo.data1 where State in ('Bihar','Jharkhand')
+
 --population of india
 select sum(population) from project.dbo.data2
+
 --Average growth of India
 select avg(growth)*100 as avg_growth from project..data1
+
 --Average growth of Individual States
 select state,avg(growth)*100 as avg_growth from project..data1 group by state
+
 --Average sex ratio
 select state,round(avg(Sex_Ratio),0) as sex_ratio from project..data1 group by state
+
 --Average highest sex ratio of Individual States
 select state,round(avg(Sex_Ratio),0) as sex_ratio from project..data1 group by state
 order by Sex_Ratio desc
 --Average literacy rate
+
 select state,round(avg(Literacy),0) as literacy from project..data1 group by state order
 by literacy desc
+
 --literacy rate above 90
 select state,round(avg(Literacy),0) as literacy from project..data1 group by state having
 round(avg(Literacy),0)>90 order by literacy desc
+
 --top 3 in terms of growth of Individual States
 select top 3 state,avg(growth)*100 as avg_growth from project..data1 group by state order
 by avg_growth desc
+
 -- bottom 3 in terms of growth of Individual States
 select top 3 state,avg(growth)*100 as avg_growth from project..data1 group by state order
 by avg_growth asc
+
 -- state starting with a
 select distinct state from project..data1 where state like 'a%'state ending with d
 select distinct state from project..data1 where state like 'd%'
+
 --state starting with a and ending with d
 select distinct state from project..data1 where state like 'a%' and state like '%d'
+
 -- Number of males and females by table joining
 select c.district,c.state,c.population/(c.Sex_Ratio+1)
 males,(c.population*(c.Sex_Ratio))/(c.Sex_Ratio+1) from
 (select a.district,a.state,a.Sex_Ratio/1000,b.population from project..data1 a inner join
 project..data2 b on a.district=b.district)c
+
 --Total literacy and illetrate people rate
 select d.district , d.state, d.literacy_ratio*d.population literate_people,(1-
 d.literacy_ratio)*d.population illiterate_people from
 (select a.district,a.state,a.literacy/100 literacy_ratio,b.population from
 project..data1 a inner join project..data2 b on a.district=b.district)d
+
 --total literacy rate
 select a.district,a.state,a.literacy/100 literacy_ratio,b.population from project..data1 
 a inner join project..data2 b on a.district=b.district
+
 --population in pervious census
 select d.district,d.state,population/(1+growth) previous_census_population,population
 current_census_population from
 (select a.district,a.state,a.growth growth,b.population from project..data1 a inner join
 project..data2 b on a.district=b.district)d
+
 --window
 output top 3 district from each state with highest literacy rate
 select a.* from
