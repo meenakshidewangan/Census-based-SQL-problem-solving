@@ -79,9 +79,3 @@ current_census_population from
 (select a.district,a.state,a.growth growth,b.population from project..data1 a inner join
 project..data2 b on a.district=b.district)d
 
---window
-output top 3 district from each state with highest literacy rate
-select a.* from
-(select district,state,literacy,rank() over(partition by state order by literacy desc)
-rnk from project..data1)a
-where a.rnk in (1,2,3) order by state
